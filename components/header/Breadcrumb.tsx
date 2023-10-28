@@ -11,7 +11,7 @@ function Breadcrumb({ breadcrumb }: Props) {
   const Icon = breadcrumb.icon;
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center ">
       <Icon className="w-6 h-6 text-primary" />
 
       <BiChevronRight className="w-5 h-5 text-neutral-400" />

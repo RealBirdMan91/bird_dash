@@ -1,19 +1,25 @@
 "use client";
 import { useState, useEffect, useMemo, use } from "react";
 import Breadcrumb from "./Breadcrumb";
-import {
-  BreadcrumbItem,
-  NavigationItem,
-  useNavigationStore,
-} from "@/store/navigationStore";
+import { NavigationItem, useNavigationStore } from "@/store/navigationStore";
 import { usePathname } from "next/navigation";
 import { navigation } from "@/store/navigationStore";
 import { Skeleton } from "../ui/skeleton";
 import { BiChevronRight } from "react-icons/bi";
+import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useLanguageStore } from "@/store/languageStore";
 
 function Header() {
   const { breadcrumb, setBreadcrumb } = useNavigationStore();
   const path = usePathname();
+  const { language, setLanguage } = useLanguageStore();
 
   const breadcrumbMap = useMemo(() => {
     const map: { [key: string]: { parent: NavigationItem; child: any } } = {};
@@ -58,7 +64,48 @@ function Header() {
 
   return (
     <header className="flex flex-col gap-5">
-      <Breadcrumb breadcrumb={breadcrumb} />
+      <div className="flex justify-between">
+        <Breadcrumb breadcrumb={breadcrumb} />
+        <div className="w-27">
+          <Select
+            onValueChange={(val) => setLanguage(val)}
+            defaultValue={language}
+          >
+            <SelectTrigger className="focus:ring-primary">
+              <SelectValue placeholder="Select a verified email to display" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="en">
+                <div className="flex items-center mr-3 gap-2">
+                  <Image
+                    src="/images/US.png"
+                    alt="lang en"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="font-semibold text-sm text-neutral-500">
+                    en
+                  </span>
+                </div>
+              </SelectItem>
+              <SelectItem value="de">
+                <div className="flex items-center mr-3 gap-2">
+                  <Image
+                    src="/images/DE.png"
+                    width={24}
+                    height={24}
+                    alt="lang de"
+                  />
+                  <span className="font-semibold text-sm text-neutral-500">
+                    de
+                  </span>
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       <div>
         <h1 className="text-3xl font-semibold text-neutral-900">
           {breadcrumb.subMenu.name}

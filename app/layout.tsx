@@ -22,7 +22,7 @@ export default function RootLayout({
         <Sidebar />
         <div className="ml-64 p-6">
           <Header />
-          <main>{children}</main>
+          <main className="mt-8">{children}</main>
         </div>
       </body>
     </html>
