@@ -12,11 +12,13 @@ function Breadcrumb({ breadcrumb }: Props) {
 
   return (
     <div className="flex gap-2 items-center ">
-      <Icon className="w-6 h-6 text-primary" />
+      <Icon className="w-6 h-6 text-primary dark:text-white" />
 
-      <BiChevronRight className="w-5 h-5 text-neutral-400" />
-      <span className="text-neutral-700">{breadcrumb.name}</span>
-      <BiChevronRight className="w-5 h-5 text-neutral-400" />
+      <BiChevronRight className="w-5 h-5 text-neutral-400 dark:text-white" />
+      <span className="text-neutral-700 dark:text-white">
+        {breadcrumb.name}
+      </span>
+      <BiChevronRight className="w-5 h-5 text-neutral-400 dark:text-white" />
       <span className="text-neutral-700 font-semibold bg-neutral-100 px-2 py-1 rounded-lg">
         {breadcrumb.subMenu.name}
       </span>

@@ -44,14 +44,14 @@ function CommandSearch() {
   return (
     <div className="px-6">
       <button
-        className="text-sm text-neutral-500 cursor-pointer w-full flex justify-between items-center border  rounded-lg py-2 px-3 "
+        className="text-sm text-neutral-500 cursor-pointer w-full flex justify-between items-center border  rounded-lg py-2 px-3 dark:text-white dark:border-slate-700"
         onClick={() => setOpen((open) => !open)}
       >
         <div className="flex items-center gap-1">
           <CiSearch className="w-5 h-5" />
           <span>Search</span>
         </div>
-        <kbd className="flex gap-1 items-center border rounded-full py-[2px] px-4 bg-neutral-100">
+        <kbd className="flex gap-1 items-center border rounded-full py-[2px] px-4 bg-neutral-100 dark:bg-slate-900">
           <span className="text-xs">⌘</span>
           <span>K</span>
         </kbd>

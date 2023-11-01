@@ -107,10 +107,12 @@ function Header() {
         </div>
       </div>
       <div>
-        <h1 className="text-3xl font-semibold text-neutral-900">
+        <h1 className="text-3xl font-semibold text-neutral-900 dark:text-white">
           {breadcrumb.subMenu.name}
         </h1>
-        <span className="text-neutral-500">{breadcrumb.subMenu.desc}</span>
+        <span className="text-neutral-500 dark:text-white">
+          {breadcrumb.subMenu.desc}
+        </span>
       </div>
       <hr />
     </header>

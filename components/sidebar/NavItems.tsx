@@ -33,7 +33,7 @@ function NavItem({ item }: NavItemProps) {
 
   return (
     <li
-      className="px-6"
+      className="px-6 "
       onMouseEnter={() => {
         if (isNavigationItem(item)) {
           setActiveCategory(item);
@@ -42,22 +42,23 @@ function NavItem({ item }: NavItemProps) {
     >
       <div
         className={cn(
-          "flex items-center py-2 px-4 gap-2 hover:bg-neutral-100 rounded-lg  transition-all duration-200 ease-linear cursor-pointer group",
-          activeCategory?.name === item.name && "bg-neutral-100"
+          "flex items-center py-2 px-4 gap-2 hover:bg-neutral-100 dark:hover:bg-primary rounded-lg  transition-all duration-200 ease-linear cursor-pointer group",
+          activeCategory?.name === item.name && "bg-neutral-100 dark:bg-primary"
         )}
         onClick={onClickHandler}
       >
         <span>
           <Icon
             className={cn(
-              "w-5 h-5 text-neutral-700 group-hover:w-6 group-hover:h-6 group-hover:text-primary",
-              activeCategory?.name === item.name && "w-6 h-6 text-primary"
+              "w-5 h-5 text-neutral-700 group-hover:w-6 group-hover:h-6 group-hover:text-primary dark:text-white dark:group-hover:text-white",
+              activeCategory?.name === item.name &&
+                "w-6 h-6 text-primary dark:text-white"
             )}
           />
         </span>
         <span
           className={cn(
-            "text-sm text-neutral-700 group-hover:font-semibold",
+            "text-sm text-neutral-700 group-hover:font-semibold dark:text-white",
             activeCategory?.name === item.name && "font-semibold"
           )}
         >

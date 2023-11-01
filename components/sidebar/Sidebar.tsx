@@ -13,12 +13,12 @@ function Sidebar() {
       onMouseLeave={() => setActiveCategory(null)}
       className="flex fixed z-10  top-0 left-0"
     >
-      <aside className="z-20 h-screen w-64 bg-white border-r border-neutral-200">
+      <aside className="z-20 h-screen w-64 bg-white border-r border-neutral-200 dark:bg-slate-800 dark:border-slate-700">
         <div
           className="w-full py-6 flex flex-col gap-6 "
           onMouseEnter={() => setActiveCategory(null)}
         >
-          <h3 className="text-neutral-900 text-3xl font-semibold px-6">
+          <h3 className="text-neutral-900 text-3xl font-semibold px-6 dark:text-white">
             <span className="text-primary">Bird</span>Dash
           </h3>
           <CommandSearch />

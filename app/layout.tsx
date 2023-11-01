@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Header from "@/components/header/Header";
+import Provider from "./provider";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,13 +20,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Sidebar />
-        <div className="ml-64 p-6">
-          <Header />
-          <main className="mt-8">{children}</main>
-        </div>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn("dark:bg-slate-900 dark:text-white", inter.className)}
+      >
+        <Provider>
+          <Sidebar />
+          <div className="ml-64 p-6">
+            <Header />
+            <main className="mt-8">{children}</main>
+          </div>
+          <ThemeSwitcher />
+        </Provider>
       </body>
     </html>
   );
