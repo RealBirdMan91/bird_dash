@@ -1,0 +1,73 @@
+{
+  "Index": {
+    "title": "Hallo Welt"
+  },
+  "Navigation": {
+    "schools": {
+      "name": "Schulen",
+      "all": {
+        "name": "Alle Schulen",
+        "desc": "Verwalte alle deine Schulen hier"
+      },
+      "create": {
+        "name": "Schule erstellen",
+        "desc": "Erstelle eine neue Schule"
+      }
+    },
+    "employees": {
+      "name": "Mitarbeiter",
+      "all": {
+        "name": "Alle Mitarbeiter",
+        "desc": "Verwalte alle deine Mitarbeiter hier"
+      },
+      "create": {
+        "name": "Mitarbeiter erstellen",
+        "desc": "Erstelle einen neuen Mitarbeiter"
+      }
+    },
+    "students": {
+      "name": "Schüler",
+      "all": {
+        "name": "Alle Schüler",
+        "desc": "Verwalte alle deine Schüler hier"
+      },
+      "create": {
+        "name": "Schüler erstellen",
+        "desc": "Erstelle einen neuen Schüler"
+      }
+    },
+    "tasks": {
+      "name": "Aufgaben",
+      "all": {
+        "name": "Alle Aufgaben",
+        "desc": "Verwalte alle deine Aufgaben hier"
+      },
+      "create": {
+        "name": "Aufgabe erstellen",
+        "desc": "Erstelle eine neue Aufgabe"
+      }
+    },
+    "reporting": {
+      "name": "Berichtswesen",
+      "all": {
+        "name": "Alle Berichte",
+        "desc": "Verwalte alle deine Berichte hier"
+      },
+      "create": {
+        "name": "Bericht erstellen",
+        "desc": "Erstelle einen neuen Bericht"
+      }
+    },
+    "roles": {
+      "name": "Rollen",
+      "all": {
+        "name": "Alle Rollen",
+        "desc": "Verwalte alle deine Rollen hier"
+      },
+      "create": {
+        "name": "Rolle erstellen",
+        "desc": "Erstelle eine neue Rolle"
+      }
+    }
+  }
+}

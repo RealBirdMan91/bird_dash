@@ -8,7 +8,8 @@ import {
 } from "@/store/navigationStore";
 import { isNavigationItem } from "@/types/guards";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-intl/client";
+import { useLocale, useTranslations } from "next-intl";
 
 type NavItemsProps = {
   items?: NavigationItem[] | SubMenu[];
@@ -23,7 +24,8 @@ function NavItem({ item }: NavItemProps) {
   const router = useRouter();
   const Icon = item.icon;
 
-  function onClickHandler() {
+  const t = useTranslations("Navigation");
+  async function onClickHandler() {
     if (!isNavigationItem(item)) {
       setBreadcrumb({ ...activeCategory!, subMenu: item });
       setActiveCategory(null);
@@ -62,7 +64,7 @@ function NavItem({ item }: NavItemProps) {
             activeCategory?.name === item.name && "font-semibold"
           )}
         >
-          {item.name}
+          {t(item.name)}
         </span>
       </div>
     </li>

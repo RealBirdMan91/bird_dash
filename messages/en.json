@@ -1,0 +1,73 @@
+{
+  "Index": {
+    "title": "Hello world!"
+  },
+  "Navigation": {
+    "schools": {
+      "name": "Schools",
+      "all": {
+        "name": "All schools",
+        "desc": "Manage all your schools in here"
+      },
+      "create": {
+        "name": "Create school",
+        "desc": "Create a new school"
+      }
+    },
+    "employees": {
+      "name": "Employees",
+      "all": {
+        "name": "All Employees",
+        "desc": "Manage all your employees in here"
+      },
+      "create": {
+        "name": "Create Employee",
+        "desc": "Create a new employee in here"
+      }
+    },
+    "students": {
+      "name": "Students",
+      "all": {
+        "name": "All Students",
+        "desc": "Manage all your students in here"
+      },
+      "create": {
+        "name": "Create Student",
+        "desc": "Create a new student in here"
+      }
+    },
+    "tasks": {
+      "name": "Tasks",
+      "all": {
+        "name": "All Tasks",
+        "desc": "Manage all your tasks in here"
+      },
+      "create": {
+        "name": "Create Task",
+        "desc": "Create a new task in here"
+      }
+    },
+    "reporting": {
+      "name": "Reporting",
+      "all": {
+        "name": "All Reports",
+        "desc": "Manage all your reports in here"
+      },
+      "create": {
+        "name": "Create Report",
+        "desc": "Create a new report in here"
+      }
+    },
+    "roles": {
+      "name": "Roles",
+      "all": {
+        "name": "All Roles",
+        "desc": "Manage all your roles in here"
+      },
+      "create": {
+        "name": "Create Role",
+        "desc": "Create a new role in here"
+      }
+    }
+  }
+}

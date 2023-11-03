@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 
-import Link from "next/link";
 import { CiSearch } from "react-icons/ci";
 import {
   CommandDialog,
@@ -19,10 +18,14 @@ import {
   navigation,
   useNavigationStore,
 } from "@/store/navigationStore";
+import { useRouter } from "next-intl/client";
+import { useTranslations } from "next-intl";
 
 function CommandSearch() {
   const [open, setOpen] = React.useState(false);
   const { setBreadcrumb } = useNavigationStore();
+  const router = useRouter();
+  const t = useTranslations("Navigation");
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -36,9 +39,10 @@ function CommandSearch() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  function onClickHandler(item: NavigationItem, subItem: SubMenu) {
+  function onNavigateHandler(item: NavigationItem, subItem: SubMenu) {
     setBreadcrumb({ ...item, subMenu: subItem });
     setOpen(false);
+    router.push(subItem.path);
   }
 
   return (
@@ -63,19 +67,18 @@ function CommandSearch() {
           {navigation.map((item, index) => (
             <div key={index}>
               <CommandSeparator />
-              <CommandGroup heading={item.name}>
+              <CommandGroup heading={t(item.name)}>
                 {item.subMenu.map((subItem, subIndex) => (
-                  <CommandItem key={subIndex}>
-                    <Link
-                      href={subItem.path}
-                      className="flex gap-2 w-full"
-                      onClick={() => onClickHandler(item, subItem)}
-                    >
+                  <CommandItem
+                    key={subIndex}
+                    onSelect={() => onNavigateHandler(item, subItem)}
+                  >
+                    <div className="flex gap-2 w-full">
                       <subItem.icon className="w-5 h-5 text-neutral-500" />
                       <span className="font-sm text-neutral-500">
-                        {subItem.name}
+                        {t(subItem.name)}
                       </span>
-                    </Link>
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>
