@@ -1,22 +1,8 @@
-"use client";
-
-import { useTranslations } from "next-intl";
 import React from "react";
+import axios from "axios";
 
 function SchoolsPage() {
-  const t = useTranslations("Index");
-  return (
-    <div>
-      <h1>{t("title")}</h1>
-      <button
-        onClick={() => {
-          console.log("hai");
-        }}
-      >
-        Klick mich
-      </button>
-    </div>
-  );
+  return <div>hai schools</div>;
 }
 
 export default SchoolsPage;

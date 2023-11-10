@@ -8,6 +8,7 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "de" }];
