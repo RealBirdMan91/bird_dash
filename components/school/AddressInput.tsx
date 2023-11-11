@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -8,9 +8,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, set } from "react-hook-form";
 import { CreateEmployeeType } from "@/types/employeeSchema";
-import { Loader } from "@googlemaps/js-api-loader";
 import getGoogleMapsApiClient from "@/lib/googleApiClient";
 
 type Props = {
@@ -18,27 +17,61 @@ type Props = {
 };
 
 export default function AddressInput({ form }: Props) {
+  const [formattedAddress, setFormattedAddress] = useState("");
   const addressField = form.watch("address");
-  console.log(addressField);
   const sessionTokenRef = useRef<string>();
 
-  useEffect(() => {
-    (async () => {
-      const google = await getGoogleMapsApiClient();
-      if (!sessionTokenRef.current) {
-        sessionTokenRef.current =
-          new google.maps.places.AutocompleteSessionToken() as string;
+  async function onAddressChange(address: string) {
+    const google = await getGoogleMapsApiClient();
+    if (!sessionTokenRef.current) {
+      sessionTokenRef.current =
+        new google.maps.places.AutocompleteSessionToken() as string;
+    }
+    const { predictions } =
+      await new google.maps.places.AutocompleteService().getPlacePredictions({
+        input: address,
+        types: ["geocode"],
+        sessionToken: sessionTokenRef.current,
+        region: "eur",
+        componentRestrictions: { country: "de" },
+      });
+
+    const service = new google.maps.places.PlacesService(
+      document.createElement("div")
+    );
+    service.getDetails(
+      { placeId: predictions[0].place_id },
+      (place, status) => {
+        if (
+          status === google.maps.places.PlacesServiceStatus.OK &&
+          place &&
+          place.address_components
+        ) {
+          // Überprüfen, ob die Adresse eine Straße (route) und eine Hausnummer (street_number) enthält
+          const hasStreet = place.address_components.some((component) =>
+            component.types.includes("route")
+          );
+          const hasNumber = place.address_components.some((component) =>
+            component.types.includes("street_number")
+          );
+
+          if (hasStreet && hasNumber && place.formatted_address) {
+            // Adresse mit Straße und Hausnummer gefunden
+            console.log(place);
+            setFormattedAddress(place.formatted_address);
+          } else {
+            setFormattedAddress("");
+          }
+        }
       }
-      const { predictions } =
-        await new google.maps.places.AutocompleteService().getPlacePredictions({
-          input: "Obers",
-          types: ["address"],
-          sessionToken: sessionTokenRef.current,
-          region: "eur",
-        });
-      console.log(predictions);
-    })();
-  }, []);
+    );
+  }
+
+  useEffect(() => {
+    if (addressField) {
+      onAddressChange(addressField);
+    }
+  }, [addressField, onAddressChange]);
 
   return (
     <FormField
@@ -50,7 +83,7 @@ export default function AddressInput({ form }: Props) {
           <FormControl>
             <Input placeholder="Unicorn Road" {...field} />
           </FormControl>
-          <FormMessage />
+          {formattedAddress && <FormMessage>{formattedAddress}</FormMessage>}
         </FormItem>
       )}
     />
