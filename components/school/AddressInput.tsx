@@ -22,49 +22,53 @@ export default function AddressInput({ form }: Props) {
   const sessionTokenRef = useRef<string>();
 
   async function onAddressChange(address: string) {
-    const google = await getGoogleMapsApiClient();
-    if (!sessionTokenRef.current) {
-      sessionTokenRef.current =
-        new google.maps.places.AutocompleteSessionToken() as string;
-    }
-    const { predictions } =
-      await new google.maps.places.AutocompleteService().getPlacePredictions({
-        input: address,
-        types: ["geocode"],
-        sessionToken: sessionTokenRef.current,
-        region: "eur",
-        //componentRestrictions: { country: "de" },
-      });
+    try {
+      const google = await getGoogleMapsApiClient();
+      if (!sessionTokenRef.current) {
+        sessionTokenRef.current =
+          new google.maps.places.AutocompleteSessionToken() as string;
+      }
+      const { predictions } =
+        await new google.maps.places.AutocompleteService().getPlacePredictions({
+          input: address,
+          types: ["geocode"],
+          sessionToken: sessionTokenRef.current,
+          region: "eur",
+          //componentRestrictions: { country: "de" },
+        });
 
-    const service = new google.maps.places.PlacesService(
-      document.createElement("div")
-    );
-    service.getDetails(
-      { placeId: predictions[0].place_id },
-      (place, status) => {
-        if (
-          status === google.maps.places.PlacesServiceStatus.OK &&
-          place &&
-          place.address_components
-        ) {
-          // Überprüfen, ob die Adresse eine Straße (route) und eine Hausnummer (street_number) enthält
-          const hasStreet = place.address_components.some((component) =>
-            component.types.includes("route")
-          );
-          const hasNumber = place.address_components.some((component) =>
-            component.types.includes("street_number")
-          );
+      const service = new google.maps.places.PlacesService(
+        document.createElement("div")
+      );
+      service.getDetails(
+        { placeId: predictions[0].place_id },
+        (place, status) => {
+          if (
+            status === google.maps.places.PlacesServiceStatus.OK &&
+            place &&
+            place.address_components
+          ) {
+            // Überprüfen, ob die Adresse eine Straße (route) und eine Hausnummer (street_number) enthält
+            const hasStreet = place.address_components.some((component) =>
+              component.types.includes("route")
+            );
+            const hasNumber = place.address_components.some((component) =>
+              component.types.includes("street_number")
+            );
 
-          if (hasStreet && hasNumber && place.formatted_address) {
-            // Adresse mit Straße und Hausnummer gefunden
-            console.log(place);
-            setFormattedAddress(place.formatted_address);
-          } else {
-            setFormattedAddress("");
+            if (hasStreet && hasNumber && place.formatted_address) {
+              // Adresse mit Straße und Hausnummer gefunden
+              console.log(place);
+              setFormattedAddress(place.formatted_address);
+            } else {
+              setFormattedAddress("");
+            }
           }
         }
-      }
-    );
+      );
+    } catch (err) {
+      setFormattedAddress("");
+    }
   }
 
   useEffect(() => {
