@@ -33,7 +33,7 @@ export default function AddressInput({ form }: Props) {
         types: ["geocode"],
         sessionToken: sessionTokenRef.current,
         region: "eur",
-        componentRestrictions: { country: "de" },
+        //componentRestrictions: { country: "de" },
       });
 
     const service = new google.maps.places.PlacesService(
