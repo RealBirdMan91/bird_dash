@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FormDescription,
   FormField,
@@ -14,10 +14,9 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, set } from "react-hook-form";
 import { CreateEmployeeType } from "@/types/employeeSchema";
 import getGoogleMapsApiClient from "@/lib/googleApiClient";
-import { on } from "events";
 
 type Props = {
   form: UseFormReturn<CreateEmployeeType>;
@@ -55,7 +54,7 @@ export default function AddressInput({ form }: Props) {
           document.createElement("div")
         );
 
-        predictions.forEach((predictedAddress) => {
+        return predictions.slice(0, 10).map((predictedAddress) => {
           service.getDetails(
             { placeId: predictedAddress.place_id },
             (place, status) => {
@@ -73,17 +72,17 @@ export default function AddressInput({ form }: Props) {
                 );
 
                 if (hasStreet && hasNumber && place.formatted_address) {
-                  // Adresse mit Straße und Hausnummer gefunden
-
-                  if (!formattedAddress.includes(place.formatted_address)) {
-                    // Adresse mit Straße und Hausnummer gefunden und noch nicht in der Liste
-                    setFormattedAddress((prev) => [
-                      ...prev,
-                      place.formatted_address as string,
-                    ]);
-                  }
-                } else {
-                  setFormattedAddress([]);
+                  // Überprüfen, ob die Adresse bereits in der Liste enthalten ist, bevor sie hinzugefügt wird
+                  setFormattedAddress((prev) => {
+                    if (
+                      place.formatted_address &&
+                      !prev.includes(place.formatted_address)
+                    ) {
+                      return [...prev, place.formatted_address];
+                    } else {
+                      return [...prev]; // Gibt den unveränderten Zustand zurück, wenn die Adresse bereits vorhanden ist
+                    }
+                  });
                 }
               }
             }
@@ -106,7 +105,6 @@ export default function AddressInput({ form }: Props) {
 
   const [inputValue, setInputValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <FormField
       control={form.control}
@@ -123,7 +121,7 @@ export default function AddressInput({ form }: Props) {
                 value={inputValue}
               />
               {isOpen && formattedAddress.length > 0 && (
-                <CommandEmpty>No language found.</CommandEmpty>
+                <CommandEmpty>No Street found yet</CommandEmpty>
               )}
               <CommandGroup>
                 {isOpen &&

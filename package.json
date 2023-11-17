@@ -16,6 +16,8 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@react-google-maps/api": "^2.19.2",
+    "@tanstack/react-query": "^5.8.4",
+    "@tanstack/react-query-devtools": "^5.8.4",
     "axios": "^1.6.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -35,6 +37,7 @@
     "zustand": "^4.4.4"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.54.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
