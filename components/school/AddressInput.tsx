@@ -15,12 +15,12 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { UseFormReturn } from "react-hook-form";
-import { CreateEmployeeType } from "@/types/employeeSchema";
+import { type CreateSchoolType } from "@/types/schoolSchema";
 
 import { useAddress } from "@/hooks/useAddress";
 
 type Props = {
-  form: UseFormReturn<CreateEmployeeType>;
+  form: UseFormReturn<CreateSchoolType>;
 };
 
 export default function AddressInput({ form }: Props) {

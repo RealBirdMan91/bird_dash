@@ -8,7 +8,8 @@ import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { cn } from "@/lib/utils";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import Script from "next/script";
+import React from "react";
+import "react-toastify/dist/ReactToastify.css";
 
 export function generateStaticParams() {
   return [{ locale: "en" }, { locale: "de" }];

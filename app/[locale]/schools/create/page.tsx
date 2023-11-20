@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,27 +14,51 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
-  CreateEmployeeSchema,
-  CreateEmployeeType,
-} from "@/types/employeeSchema";
+  CreateSchoolSchema,
+  type CreateSchoolType,
+} from "@/types/schoolSchema";
 import { Textarea } from "@/components/ui/textarea";
 import AddressInput from "@/components/school/AddressInput";
+import { useMutation } from "@tanstack/react-query";
+import axios, { type AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 export default function CreateSchoolPage() {
-  const form = useForm<CreateEmployeeType>({
-    resolver: zodResolver(CreateEmployeeSchema),
+  const { mutate, data, isPending, error, isSuccess } = useMutation<
+    CreateSchoolType,
+    AxiosError,
+    CreateSchoolType
+  >({
+    mutationFn: (data) => axios.post("/api/schools", data),
+  });
+
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        error.response?.status === 422
+          ? "School already exists"
+          : "Something went wrong, please try again later"
+      );
+    }
+    if (isSuccess) {
+      toast.success("School created successfully");
+    }
+  }, [error, isSuccess]);
+
+  const form = useForm<CreateSchoolType>({
+    resolver: zodResolver(CreateSchoolSchema),
     defaultValues: {
       address: "",
-      information: "",
-      phone: "",
     },
   });
 
-  function onSubmit(data: CreateEmployeeType) {}
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form
+        onSubmit={form.handleSubmit((data) => mutate(data))}
+        className="w-2/3 space-y-6"
+      >
         <AddressInput form={form} />
         <FormField
           control={form.control}
