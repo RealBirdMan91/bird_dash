@@ -18,12 +18,14 @@ import { UseFormReturn } from "react-hook-form";
 import { type CreateSchoolType } from "@/types/schoolSchema";
 
 import { useAddress } from "@/hooks/useAddress";
+import { useTranslations } from "next-intl";
 
 type Props = {
   form: UseFormReturn<CreateSchoolType>;
 };
 
 export default function AddressInput({ form }: Props) {
+  const t = useTranslations("CreateSchools");
   const [isOpen, setIsOpen] = useState(false);
   const { addresses } = useAddress(form.watch().address);
 
@@ -33,11 +35,11 @@ export default function AddressInput({ form }: Props) {
       name="address"
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel>Address</FormLabel>
+          <FormLabel>{t("address.label")}</FormLabel>
 
           <Command>
             <CommandInput
-              placeholder="Search address"
+              placeholder={t("address.placeholder")}
               value={field.value}
               onValueChange={(value) => {
                 form.setValue("address", value);
@@ -46,7 +48,7 @@ export default function AddressInput({ form }: Props) {
               autoComplete="off"
             />
             {addresses && addresses?.length > 0 && (
-              <CommandEmpty>No address found.</CommandEmpty>
+              <CommandEmpty>{t("address.empty")}</CommandEmpty>
             )}
             {isOpen && (
               <CommandGroup>
@@ -68,9 +70,7 @@ export default function AddressInput({ form }: Props) {
             )}
           </Command>
 
-          <FormDescription>
-            Please insert a street this will get autocomplete by google maps
-          </FormDescription>
+          <FormDescription>{t("address.description")}</FormDescription>
           <FormMessage />
         </FormItem>
       )}

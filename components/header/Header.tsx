@@ -29,7 +29,8 @@ function Header() {
 
   useEffect(() => {
     if (!breadcrumb) {
-      const breadcrumbData = breadcrumbMap["/" + path.split("/")[2]];
+      const mapPath = `/${path.split("/").slice(2).join("/")}`;
+      const breadcrumbData = breadcrumbMap[mapPath];
       setBreadcrumb({
         ...breadcrumbData.parent,
         subMenu: breadcrumbData.child,

@@ -19,32 +19,39 @@ import {
 } from "@/types/schoolSchema";
 import { Textarea } from "@/components/ui/textarea";
 import AddressInput from "@/components/school/AddressInput";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { type AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function CreateSchoolPage() {
-  const { mutate, data, isPending, error, isSuccess } = useMutation<
+  const t = useTranslations("CreateSchools");
+
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation<
     CreateSchoolType,
     AxiosError,
     CreateSchoolType
   >({
     mutationFn: (data) => axios.post("/api/schools", data),
-  });
-
-  useEffect(() => {
-    if (error) {
+    onSuccess: () => {
+      form.reset();
+      toast.success(t("messages.success"));
+      queryClient.invalidateQueries({
+        queryKey: ["schools"],
+      });
+      router.push("/schools");
+    },
+    onError: (error) => {
       toast.error(
         error.response?.status === 422
-          ? "School already exists"
-          : "Something went wrong, please try again later"
+          ? t("messages.error_422")
+          : t("messages.error")
       );
-    }
-    if (isSuccess) {
-      toast.success("School created successfully");
-    }
-  }, [error, isSuccess]);
+    },
+  });
 
   const form = useForm<CreateSchoolType>({
     resolver: zodResolver(CreateSchoolSchema),
@@ -65,10 +72,10 @@ export default function CreateSchoolPage() {
           name="information"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Information*</FormLabel>
+              <FormLabel>{t("information.label")}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Optional information about the school"
+                  placeholder={t("information.placeholder")}
                   className="resize-none"
                   {...field}
                 />
@@ -82,15 +89,17 @@ export default function CreateSchoolPage() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone*</FormLabel>
+              <FormLabel>{t("phone.label")}</FormLabel>
               <FormControl>
-                <Input placeholder="089 3154357" {...field} />
+                <Input placeholder={t("phone.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" aria-disabled={isPending}>
+          {t("submit")}
+        </Button>
       </form>
     </Form>
   );

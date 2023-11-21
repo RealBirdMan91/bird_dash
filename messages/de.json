@@ -69,5 +69,27 @@
         "desc": "Erstelle eine neue Rolle"
       }
     }
+  },
+  "CreateSchools": {
+    "messages": {
+      "success": "Schule erfolgreich erstellt",
+      "error_422": "Schule existiert bereits",
+      "error": "Etwas ist schief gelaufen"
+    },
+    "address": {
+      "label": "Adresse*",
+      "description": "Bitte geben Sie eine Straße ein, die dann von Google Maps automatisch vervollständigt wird.",
+      "placeholder": "Ringstraße 9, 12621 Berlin, Deutschland",
+      "empty": "keine Adresse gefunden"
+    },
+    "phone": {
+      "label": "Telefonnummer*",
+      "placeholder": "+49 30 123456789"
+    },
+    "information": {
+      "label": "Information*",
+      "placeholder": "Optionale Informationen über die Schule"
+    },
+    "submit": "Schule Erstellen"
   }
 }
