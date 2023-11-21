@@ -40,7 +40,6 @@ export const columns: ColumnDef<Partial<School>>[] = [
   },
   {
     id: "actions",
-    accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
       const payment = row.original;

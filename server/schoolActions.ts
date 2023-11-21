@@ -15,5 +15,6 @@ export async function getSchools() {
       createdAt: "desc",
     },
   });
+
   return data;
 }

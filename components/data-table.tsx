@@ -21,7 +21,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   queryKey: string[];
-  queryFn: QueryFunction<TData[], QueryKey, never>;
+  queryFn: any;
 }
 
 export function DataTable<TData, TValue>({
@@ -32,7 +32,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const { data: queryData } = useQuery({
     queryKey: queryKey,
-    queryFn: queryFn,
+    queryFn: async () => await queryFn(),
     initialData: data,
   });
 

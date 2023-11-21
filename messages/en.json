@@ -91,5 +91,15 @@
       "placeholder": "Optional information about the school"
     },
     "submit": "Create School"
+  },
+  "Schools": {
+    "table": {
+      "street": "Street",
+      "city": "City",
+      "phone": "Phone",
+      "postal": "Postal",
+      "country": "Country",
+      "created_at": "Created at"
+    }
   }
 }
