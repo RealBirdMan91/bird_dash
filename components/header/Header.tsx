@@ -14,29 +14,9 @@ function Header() {
   const path = usePathname();
   const t = useTranslations("Navigation");
 
-  const breadcrumbMap = useMemo(() => {
-    const map: { [key: string]: { parent: NavigationItem; child: any } } = {};
-    navigation.forEach((item) => {
-      item.subMenu.forEach((subItem) => {
-        map[subItem.path] = {
-          parent: item,
-          child: subItem,
-        };
-      });
-    });
-    return map;
-  }, [navigation]);
-
   useEffect(() => {
-    if (!breadcrumb) {
-      const mapPath = `/${path.split("/").slice(2).join("/")}`;
-      const breadcrumbData = breadcrumbMap[mapPath];
-      setBreadcrumb({
-        ...breadcrumbData.parent,
-        subMenu: breadcrumbData.child,
-      });
-    }
-  }, []);
+    setBreadcrumb(path);
+  }, [path]);
 
   if (!breadcrumb)
     return (

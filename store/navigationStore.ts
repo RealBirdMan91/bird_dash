@@ -146,13 +146,26 @@ export const navigation: NavigationItem[] = [
 type NavigationStore = {
   activeCategory: NavigationItem | null;
   breadcrumb: BreadcrumbItem | null;
-  setBreadcrumb: (category: BreadcrumbItem | null) => void;
+  setBreadcrumb: (pathName: string) => void;
   setActiveCategory: (category: NavigationItem | null) => void;
 };
 
 export const useNavigationStore = create<NavigationStore>((set) => ({
   activeCategory: null,
   breadcrumb: null,
-  setBreadcrumb: (category) => set({ breadcrumb: category }),
+  setBreadcrumb: (pathName) => {
+    const mapPath = `/${pathName.split("/").slice(2).join("/")}`;
+    console.log("MAPPATH", { mapPath });
+    navigation.forEach((item) => {
+      item.subMenu.forEach((subItem) => {
+        if (subItem.path === mapPath) {
+          console.log({ icon: item.icon, name: item.name, subMenu: subItem });
+          set({
+            breadcrumb: { icon: item.icon, name: item.name, subMenu: subItem },
+          });
+        }
+      });
+    });
+  },
   setActiveCategory: (category) => set({ activeCategory: category }),
 }));

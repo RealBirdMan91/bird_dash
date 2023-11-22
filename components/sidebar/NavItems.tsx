@@ -10,6 +10,7 @@ import { isNavigationItem } from "@/types/guards";
 import React from "react";
 import { useRouter } from "next-intl/client";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 type NavItemsProps = {
   items?: NavigationItem[] | SubMenu[];
@@ -27,7 +28,6 @@ function NavItem({ item }: NavItemProps) {
   const t = useTranslations("Navigation");
   async function onClickHandler() {
     if (!isNavigationItem(item)) {
-      setBreadcrumb({ ...activeCategory!, subMenu: item });
       setActiveCategory(null);
       router.push(item.path);
     }
