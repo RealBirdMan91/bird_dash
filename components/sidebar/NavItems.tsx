@@ -9,7 +9,7 @@ import {
 import { isNavigationItem } from "@/types/guards";
 import React from "react";
 import { useRouter } from "next-intl/client";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 type NavItemsProps = {
   items?: NavigationItem[] | SubMenu[];

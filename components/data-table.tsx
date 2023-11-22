@@ -34,6 +34,7 @@ export function DataTable<TData, TValue>({
     queryKey: queryKey,
     queryFn: async () => await queryFn(),
     initialData: data,
+    refetchInterval: 1000 * 15,
   });
 
   const table = useReactTable({

@@ -27,7 +27,6 @@ import { useTranslations } from "next-intl";
 
 export default function CreateSchoolPage() {
   const t = useTranslations("CreateSchools");
-
   const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation<
