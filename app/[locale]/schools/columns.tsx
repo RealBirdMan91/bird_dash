@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import { FaTrashAlt } from "react-icons/fa";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -40,10 +41,8 @@ export const columns: ColumnDef<Partial<School>>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const payment = row.original;
 
+    cell: ({ row }) => {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -54,16 +53,18 @@ export const columns: ColumnDef<Partial<School>>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                console.log("HAI =)");
-              }}
-            >
-              Copy payment ID
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              See school details
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Update school
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer bg-red-400 text-white  focus:bg-red-500 focus:text-white flex items-center gap-1">
+              <FaTrashAlt />
+              <span className="font-semibold">Delete school</span>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

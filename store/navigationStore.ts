@@ -155,11 +155,9 @@ export const useNavigationStore = create<NavigationStore>((set) => ({
   breadcrumb: null,
   setBreadcrumb: (pathName) => {
     const mapPath = `/${pathName.split("/").slice(2).join("/")}`;
-    console.log("MAPPATH", { mapPath });
     navigation.forEach((item) => {
       item.subMenu.forEach((subItem) => {
         if (subItem.path === mapPath) {
-          console.log({ icon: item.icon, name: item.name, subMenu: subItem });
           set({
             breadcrumb: { icon: item.icon, name: item.name, subMenu: subItem },
           });

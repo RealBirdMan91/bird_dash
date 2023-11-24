@@ -2,7 +2,15 @@
 
 import { db } from "@/lib/db";
 
-export async function getSchools() {
+const PAGINATION_LIMIT = 7;
+
+export async function getSchools(page: number = 1) {
+  let pageNumber = page;
+
+  if (pageNumber < 1 || isNaN(pageNumber)) {
+    pageNumber = 1;
+  }
+
   const data = await db.school.findMany({
     select: {
       city: true,
@@ -11,10 +19,16 @@ export async function getSchools() {
       street: true,
       createdAt: true,
     },
+    skip: (pageNumber - 1) * PAGINATION_LIMIT,
+    take: PAGINATION_LIMIT,
     orderBy: {
       createdAt: "desc",
     },
   });
 
-  return data;
+  const total = await db.school.count();
+  const totalPages = Math.ceil(total / PAGINATION_LIMIT);
+  const hasMore = pageNumber < totalPages;
+
+  return { school: data, totalPages, page: pageNumber, hasMore };
 }

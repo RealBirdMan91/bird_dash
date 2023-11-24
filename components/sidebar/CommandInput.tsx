@@ -20,6 +20,7 @@ import {
 } from "@/store/navigationStore";
 import { useRouter } from "next-intl/client";
 import { useTranslations } from "next-intl";
+import { sub } from "date-fns";
 
 function CommandSearch() {
   const [open, setOpen] = React.useState(false);
@@ -40,7 +41,7 @@ function CommandSearch() {
   }, []);
 
   function onNavigateHandler(item: NavigationItem, subItem: SubMenu) {
-    setBreadcrumb({ ...item, subMenu: subItem });
+    setBreadcrumb(subItem.path);
     setOpen(false);
     router.push(subItem.path);
   }
