@@ -1,11 +1,13 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { SortingState } from "@tanstack/react-table";
 
 const PAGINATION_LIMIT = 7;
 
-export async function getSchools(page: number = 1) {
+export async function getSchools(page: number = 1, sorting: SortingState) {
   let pageNumber = page;
+  console.log(sorting);
 
   if (pageNumber < 1 || isNaN(pageNumber)) {
     pageNumber = 1;
@@ -30,5 +32,5 @@ export async function getSchools(page: number = 1) {
   const totalPages = Math.ceil(total / PAGINATION_LIMIT);
   const hasMore = pageNumber < totalPages;
 
-  return { school: data, totalPages, page: pageNumber, hasMore };
+  return { data, totalPages, page: pageNumber, hasMore };
 }

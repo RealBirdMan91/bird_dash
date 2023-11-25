@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { FaTrashAlt } from "react-icons/fa";
 
 // This type is used to define the shape of our data.
@@ -36,12 +36,21 @@ export const columns: ColumnDef<Partial<School>>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          createdAt
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: (row) => <span>{format(row.getValue() as Date, "dd/mm/yyyy")}</span>,
   },
   {
     id: "actions",
-
     cell: ({ row }) => {
       return (
         <DropdownMenu>

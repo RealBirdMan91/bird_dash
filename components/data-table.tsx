@@ -2,9 +2,10 @@
 
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -20,7 +21,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { useState } from "react";
 type Data<TData> = {
-  school: TData[];
+  data: TData[];
   totalPages: number;
   page: number;
   hasMore: boolean;
@@ -29,7 +30,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: Data<TData>;
   queryKey: string[];
-  queryFn: (pageSize: number) => Promise<Data<TData>>;
+  queryFn: (pageSize: number, sorting: SortingState) => Promise<Data<TData>>;
 }
 
 export function DataTable<TData, TValue>({
@@ -43,9 +44,10 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
   });
 
+  const [sorting, setSorting] = useState<SortingState>([]);
   const { data: queryData, fetchNextPage } = useInfiniteQuery({
-    queryKey,
-    queryFn: async (page) => await queryFn(page?.pageParam),
+    queryKey: [...queryKey, sorting],
+    queryFn: async (page) => await queryFn(page?.pageParam, sorting),
     initialPageParam: 1,
     initialData: {
       pages: [data],
@@ -58,17 +60,19 @@ export function DataTable<TData, TValue>({
       }
     },
   });
-  console.log(queryData);
 
   const table = useReactTable({
-    data: queryData?.pages[pagination.pageIndex].school ?? [],
+    data: queryData?.pages[pagination.pageIndex].data ?? [],
     columns,
     manualPagination: true,
     pageCount: data.totalPages,
     onPaginationChange: setPagination,
     state: {
       pagination,
+      sorting,
     },
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
   });
 
