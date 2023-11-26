@@ -45,15 +45,7 @@ export function DataTable<TData, TValue>({
   });
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const {
-    isPending,
-    isError,
-    error,
-    data: queryData,
-    isFetching,
-    isPlaceholderData,
-    isLoading,
-  } = useQuery({
+  const { data: queryData, isLoading } = useQuery({
     queryKey: [queryKey, pagination.pageIndex + 1, sorting],
     queryFn: async () => await queryFn(pagination.pageIndex + 1, sorting),
     placeholderData: keepPreviousData,
