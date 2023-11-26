@@ -24,15 +24,21 @@ export const columns: ColumnDef<Partial<School>>[] = [
   },
   {
     accessorKey: "postal",
-    header: "Postal Code",
+    header: "Postal",
   },
   {
     accessorKey: "city",
-    header: "City",
-  },
-  {
-    accessorKey: "country",
-    header: "Country",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          City
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
@@ -42,7 +48,7 @@ export const columns: ColumnDef<Partial<School>>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          createdAt
+          Created
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

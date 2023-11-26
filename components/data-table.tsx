@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { useState } from "react";
 type Data<TData> = {
@@ -40,30 +40,30 @@ export function DataTable<TData, TValue>({
   queryFn,
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState({
-    pageSize: -1,
+    pageSize: data.totalPages,
     pageIndex: 0,
   });
-
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { data: queryData, fetchNextPage } = useInfiniteQuery({
-    queryKey: [...queryKey, sorting],
-    queryFn: async (page) => await queryFn(page?.pageParam, sorting),
-    initialPageParam: 1,
-    initialData: {
-      pages: [data],
-      pageParams: [1],
-    },
+
+  const {
+    isPending,
+    isError,
+    error,
+    data: queryData,
+    isFetching,
+    isPlaceholderData,
+    isLoading,
+  } = useQuery({
+    queryKey: [queryKey, pagination.pageIndex + 1, sorting],
+    queryFn: async () => await queryFn(pagination.pageIndex + 1, sorting),
+    placeholderData: keepPreviousData,
     refetchInterval: 1000 * 60,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.hasMore && allPages.length - 1 === pagination.pageIndex) {
-        return lastPage.page + 1;
-      }
-    },
   });
 
   const table = useReactTable({
-    data: queryData?.pages[pagination.pageIndex].data ?? [],
+    data: queryData?.data ?? [],
     columns,
+
     manualPagination: true,
     pageCount: data.totalPages,
     onPaginationChange: setPagination,
@@ -122,7 +122,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {isLoading ? "Loading..." : "No results."}
                 </TableCell>
               </TableRow>
             )}
@@ -141,8 +141,7 @@ export function DataTable<TData, TValue>({
         variant="outline"
         size="sm"
         disabled={!table.getCanNextPage()}
-        onClick={async () => {
-          await fetchNextPage();
+        onClick={() => {
           table.nextPage();
         }}
       >

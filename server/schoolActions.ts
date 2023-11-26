@@ -7,7 +7,15 @@ const PAGINATION_LIMIT = 7;
 
 export async function getSchools(page: number = 1, sorting: SortingState) {
   let pageNumber = page;
-  console.log(sorting);
+  const defaultSort = { createdAt: "desc" };
+
+  let sortingOrder: { [key: string]: string } =
+    !sorting || sorting.length === 0
+      ? defaultSort
+      : sorting.reduce((acc, sort) => {
+          acc[sort.id] = sort.desc ? "desc" : "asc";
+          return acc;
+        }, {} as { [key: string]: string });
 
   if (pageNumber < 1 || isNaN(pageNumber)) {
     pageNumber = 1;
@@ -23,9 +31,7 @@ export async function getSchools(page: number = 1, sorting: SortingState) {
     },
     skip: (pageNumber - 1) * PAGINATION_LIMIT,
     take: PAGINATION_LIMIT,
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: sortingOrder,
   });
 
   const total = await db.school.count();
