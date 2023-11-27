@@ -1,11 +1,19 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { SortingState } from "@tanstack/react-table";
+import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
+interface Filter {
+  id: string;
+  value: string;
+}
 
 const PAGINATION_LIMIT = 7;
 
-export async function getSchools(page: number = 1, sorting: SortingState) {
+export async function getSchools(
+  page: number = 1,
+  sorting: SortingState = [],
+  columnFilters: ColumnFiltersState = []
+) {
   let pageNumber = page;
   const defaultSort = { createdAt: "desc" };
 
@@ -16,6 +24,13 @@ export async function getSchools(page: number = 1, sorting: SortingState) {
           acc[sort.id] = sort.desc ? "desc" : "asc";
           return acc;
         }, {} as { [key: string]: string });
+
+  let filters: { [key: string]: { contains: string } } = (
+    columnFilters ?? []
+  ).reduce<{ [key: string]: { contains: string } }>((acc, filter) => {
+    acc[filter.id] = { contains: filter.value as string };
+    return acc;
+  }, {});
 
   if (pageNumber < 1 || isNaN(pageNumber)) {
     pageNumber = 1;
@@ -29,13 +44,14 @@ export async function getSchools(page: number = 1, sorting: SortingState) {
       street: true,
       createdAt: true,
     },
+    where: filters,
     skip: (pageNumber - 1) * PAGINATION_LIMIT,
     take: PAGINATION_LIMIT,
     orderBy: sortingOrder,
   });
 
-  const total = await db.school.count();
-  const totalPages = Math.ceil(total / PAGINATION_LIMIT);
+  const totalFiltered = await db.school.count({ where: filters });
+  const totalPages = Math.ceil(totalFiltered / PAGINATION_LIMIT);
   const hasMore = pageNumber < totalPages;
 
   return { data, totalPages, page: pageNumber, hasMore };
