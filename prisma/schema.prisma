@@ -10,15 +10,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
- model School {
-  id        String   @id @default(uuid())
-  street    String 
-  city      String  @unique
-  country   String
-  postal    String
-  information String? @default("")
-  phone     String? @default("")
-  testNumber Int? @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- }
+model School {
+  id          String    @id @default(uuid())
+  street      String
+  city        String    @unique
+  country     String
+  postal      String
+  information String?   @default("")
+  phone       String?   @default("")
+  testNumber  Int?      @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  employees EmployeesOnSchools[]
+}
+
+model Employee {
+  id          String    @id @default(uuid())
+  firstName   String
+  lastName    String
+  address     String
+  isActivated Boolean   @default(false)
+  email       String    @unique
+  phone       String?   @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  schools EmployeesOnSchools[]
+}
+
+model EmployeesOnSchools {
+  id          String    @id @default(uuid())
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+  employeeId  String
+  school      School    @relation(fields: [schoolId], references: [id])
+  schoolId    String
+  isRemote    Boolean   @default(false)
+}
+
+

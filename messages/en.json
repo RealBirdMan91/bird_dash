@@ -76,12 +76,6 @@
       "error_422": "School already exists",
       "error": "Something went wrong, please try again later"
     },
-    "address": {
-      "label": "Address",
-      "description": "Please insert a street this will get autocomplete by google maps",
-      "placeholder": "Ringstraße 9, 12621 Berlin, Deutschland",
-      "empty": "no address found."
-    },
     "phone": {
       "label": "Phone*",
       "placeholder": "+49 30 123456789"
@@ -100,6 +94,14 @@
       "postal": "Postal",
       "country": "Country",
       "created_at": "Created at"
+    }
+  },
+  "Form": {
+    "address": {
+      "label": "Address",
+      "description": "Please insert a street this will get autocomplete by google maps",
+      "placeholder": "Ringstraße 9, 12621 Berlin, Deutschland",
+      "empty": "no address found."
     }
   }
 }

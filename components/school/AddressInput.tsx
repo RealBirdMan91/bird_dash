@@ -15,17 +15,16 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { UseFormReturn } from "react-hook-form";
-import { type CreateSchoolType } from "@/types/schoolSchema";
 
 import { useAddress } from "@/hooks/useAddress";
 import { useTranslations } from "next-intl";
 
 type Props = {
-  form: UseFormReturn<CreateSchoolType>;
+  form: UseFormReturn<any>;
 };
 
 export default function AddressInput({ form }: Props) {
-  const t = useTranslations("CreateSchools");
+  const t = useTranslations("Form");
   const [isOpen, setIsOpen] = useState(false);
   const { addresses } = useAddress(form.watch().address);
 
