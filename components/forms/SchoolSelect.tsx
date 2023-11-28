@@ -1,5 +1,5 @@
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
+import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ import {
 import { CreateEmployeeType } from "@/types/employeeSchema";
 
 type Props = {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<CreateEmployeeType>;
 };
 
 interface SchoolInputProps extends Props {
@@ -71,7 +71,10 @@ function SchoolInput({ form, schools }: SchoolInputProps) {
                       key={school.id}
                       onSelect={() => {
                         setInputValue(school);
-                        form.setValue("school", [...field.value, school]);
+                        form.setValue("school", [
+                          ...(!inputValue ? field.value : []),
+                          school,
+                        ]);
                       }}
                     >
                       <Check
