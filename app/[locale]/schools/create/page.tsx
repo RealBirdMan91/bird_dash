@@ -18,7 +18,7 @@ import {
   type CreateSchoolType,
 } from "@/types/schoolSchema";
 import { Textarea } from "@/components/ui/textarea";
-import AddressInput from "@/components/school/AddressInput";
+import AddressInput from "@/components/forms/AddressInput";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { type AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -26,7 +26,10 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function CreateSchoolPage() {
-  const t = useTranslations("CreateSchools");
+  const tSchools = useTranslations("Schools");
+  const tResponses = useTranslations("Responses");
+  const t = useTranslations("Form");
+
   const router = useRouter();
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation<
@@ -37,7 +40,7 @@ export default function CreateSchoolPage() {
     mutationFn: (data) => axios.post("/api/schools", data),
     onSuccess: () => {
       form.reset();
-      toast.success(t("messages.success"));
+      toast.success(tResponses("messages.success"));
       queryClient.invalidateQueries({
         queryKey: ["schools"],
       });
@@ -46,8 +49,8 @@ export default function CreateSchoolPage() {
     onError: (error) => {
       toast.error(
         error.response?.status === 422
-          ? t("messages.error_422")
-          : t("messages.error")
+          ? tResponses("messages.error_422")
+          : tResponses("messages.error")
       );
     },
   });
@@ -97,7 +100,7 @@ export default function CreateSchoolPage() {
           )}
         />
         <Button type="submit" aria-disabled={isPending}>
-          {t("submit")}
+          {t("submit", { subject: tSchools("subject") })}
         </Button>
       </form>
     </Form>

@@ -28,7 +28,10 @@ model Employee {
   id          String    @id @default(uuid())
   firstName   String
   lastName    String
-  address     String
+  street     String
+  city        String   
+  country     String
+  postal      String
   isActivated Boolean   @default(false)
   email       String    @unique
   phone       String?   @default("")

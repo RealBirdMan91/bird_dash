@@ -14,6 +14,13 @@ export const CreateEmployeeSchema = z.object({
   lastName: z.string().min(2).max(25),
   email: z.string().email(),
   phone: z.string().min(5).optional(),
+  school: z.array(
+    z.object({
+      id: z.string(),
+      address: z.string(),
+      isRemote: z.boolean(),
+    })
+  ),
 });
 
 export type CreateEmployeeType = z.infer<typeof CreateEmployeeSchema>;

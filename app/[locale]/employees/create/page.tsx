@@ -1,5 +1,6 @@
 "use client";
-import AddressInput from "@/components/school/AddressInput";
+import AddressInput from "@/components/forms/AddressInput";
+import SchoolSelect from "@/components/forms/SchoolSelect";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,21 +16,58 @@ import {
   CreateEmployeeType,
 } from "@/types/employeeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 function CreateEmployeePage() {
+  const t = useTranslations("Form");
+  const tEmployees = useTranslations("Employees");
+  const tResponses = useTranslations("Responses");
+
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const form = useForm<CreateEmployeeType>({
     resolver: zodResolver(CreateEmployeeSchema),
     defaultValues: {
       address: "",
+      school: [],
+    },
+  });
+  console.log(form.getValues());
+
+  const { mutate, isPending } = useMutation<
+    CreateEmployeeType,
+    AxiosError,
+    CreateEmployeeType
+  >({
+    mutationFn: (data) => axios.post("/api/employees", data),
+    onSuccess: () => {
+      form.reset();
+      toast.success(tResponses("messages.success"));
+      queryClient.invalidateQueries({
+        queryKey: ["schools"],
+      });
+      router.push("/employees");
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.status === 422
+          ? tResponses("messages.error_422")
+          : tResponses("messages.error")
+      );
     },
   });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => {})}
+        onSubmit={form.handleSubmit((data) => mutate(data))}
         className="w-2/3 space-y-6"
       >
         <FormField
@@ -37,9 +75,9 @@ function CreateEmployeePage() {
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{"FirstNameLabel"}</FormLabel>
+              <FormLabel>{t("firstname.label")}</FormLabel>
               <FormControl>
-                <Input placeholder={"FirstName"} {...field} />
+                <Input placeholder={t("firstname.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -50,9 +88,9 @@ function CreateEmployeePage() {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{"lastNameLabel"}</FormLabel>
+              <FormLabel>{t("lastname.label")}</FormLabel>
               <FormControl>
-                <Input placeholder={"LastName"} {...field} />
+                <Input placeholder={t("lastname.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,9 +101,9 @@ function CreateEmployeePage() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{"EmailLabel"}</FormLabel>
+              <FormLabel>{t("email.label")}</FormLabel>
               <FormControl>
-                <Input placeholder={"Email"} {...field} />
+                <Input placeholder={t("email.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,15 +115,18 @@ function CreateEmployeePage() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{"PhoneLabel"}</FormLabel>
+              <FormLabel>{t("phone.label")}</FormLabel>
               <FormControl>
-                <Input placeholder={"Phone"} {...field} />
+                <Input placeholder={t("phone.placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit Form</Button>
+        <SchoolSelect form={form} />
+        <Button type="submit" disabled={isPending}>
+          {t("submit", { subject: tEmployees("subject") })}
+        </Button>
       </form>
     </Form>
   );

@@ -70,29 +70,23 @@
       }
     }
   },
-  "CreateSchools": {
-    "messages": {
-      "success": "Schule erfolgreich erstellt",
-      "error_422": "Schule existiert bereits",
-      "error": "Etwas ist schief gelaufen"
-    },
-    "phone": {
-      "label": "Telefonnummer*",
-      "placeholder": "+49 30 123456789"
-    },
-    "information": {
-      "label": "Information*",
-      "placeholder": "Optionale Informationen über die Schule"
-    },
-    "submit": "Schule Erstellen"
-  },
   "Schools": {
+    "subject": "Schule",
     "table": {
       "street": "Straße",
       "city": "Stadt",
       "phone": "Telefonnummer",
       "postal": "Postleitzahl",
       "country": "Land",
+      "created_at": "Erstellt am"
+    }
+  },
+  "Employees": {
+    "subject": "Mitarbeiter",
+    "table": {
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "email": "E-Mail",
       "created_at": "Erstellt am"
     }
   },
@@ -103,6 +97,34 @@
       "description": "Bitte geben Sie eine Straße ein, die dann von Google Maps automatisch vervollständigt wird.",
       "placeholder": "Ringstraße 9, 12621 Berlin, Deutschland",
       "empty": "keine Adresse gefunden"
+    },
+    "phone": {
+      "label": "Telefonnummer*",
+      "placeholder": "+49 30 123456789"
+    },
+    "information": {
+      "label": "Information*",
+      "placeholder": "Optionale Informationen über die Schule"
+    },
+    "firstname": {
+      "label": "Vorname",
+      "placeholder": "John"
+    },
+    "lastname": {
+      "label": "Nachname",
+      "placeholder": "Doe"
+    },
+    "email": {
+      "label": "E-Mail",
+      "placeholder": "john@web.de"
+    },
+    "submit": "{subject} erstellen"
+  },
+  "Responses": {
+    "messages": {
+      "success": "Mitarbeiter erfolgreich erstellt",
+      "error_422": "Mitarbeiter existiert bereits",
+      "error": "Etwas ist schief gelaufen"
     }
   }
 }

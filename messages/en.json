@@ -70,23 +70,8 @@
       }
     }
   },
-  "CreateSchools": {
-    "messages": {
-      "success": "School created successfully",
-      "error_422": "School already exists",
-      "error": "Something went wrong, please try again later"
-    },
-    "phone": {
-      "label": "Phone*",
-      "placeholder": "+49 30 123456789"
-    },
-    "information": {
-      "label": "Information*",
-      "placeholder": "Optional information about the school"
-    },
-    "submit": "Create School"
-  },
   "Schools": {
+    "subject": "school",
     "table": {
       "street": "Street",
       "city": "City",
@@ -96,12 +81,49 @@
       "created_at": "Created at"
     }
   },
+  "Employees": {
+    "subject": "employee",
+    "table": {
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "email": "Email",
+      "created_at": "Created at"
+    }
+  },
   "Form": {
     "address": {
       "label": "Address",
       "description": "Please insert a street this will get autocomplete by google maps",
       "placeholder": "Ringstraße 9, 12621 Berlin, Deutschland",
       "empty": "no address found."
+    },
+    "phone": {
+      "label": "Phone*",
+      "placeholder": "+49 30 123456789"
+    },
+    "information": {
+      "label": "Information*",
+      "placeholder": "Optional information about the school"
+    },
+    "firstname": {
+      "label": "First name",
+      "placeholder": "John"
+    },
+    "lastname": {
+      "label": "Last name",
+      "placeholder": "Doe"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "john@outlook.com"
+    },
+    "submit": "Create {subject}"
+  },
+  "Responses": {
+    "messages": {
+      "success": "School created successfully",
+      "error_422": "School already exists",
+      "error": "Something went wrong, please try again later"
     }
   }
 }
