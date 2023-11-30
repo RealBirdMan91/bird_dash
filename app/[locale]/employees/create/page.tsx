@@ -36,10 +36,14 @@ function CreateEmployeePage() {
     resolver: zodResolver(CreateEmployeeSchema),
     defaultValues: {
       address: "",
-      school: [],
+      schools: [
+        {
+          id: "",
+          address: "",
+        },
+      ],
     },
   });
-  console.log(form.getValues());
 
   const { mutate, isPending } = useMutation<
     CreateEmployeeType,

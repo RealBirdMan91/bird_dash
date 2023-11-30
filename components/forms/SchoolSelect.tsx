@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
-import { Check, ChevronsUpDown } from "lucide-react";
+"use client";
+import React from "react";
+import { UseFormReturn } from "react-hook-form";
+import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/command";
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -23,66 +23,43 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CreateEmployeeType } from "@/types/employeeSchema";
-import { Checkbox } from "../ui/checkbox";
-import { set } from "date-fns";
 
 type Props = {
   form: UseFormReturn<CreateEmployeeType>;
 };
 
-interface SchoolInputProps extends Props {
-  schools: CreateEmployeeType["school"];
-}
-type SchoolInput = {
+type School = {
   address: string;
   id: string;
-  isRemote: boolean;
 };
 
-function SchoolInput({ form, schools }: SchoolInputProps) {
-  const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = useState<SchoolInput>({
-    address: "",
-    isRemote: false,
-    id: "",
-  });
+interface SchoolInputProps extends Props {
+  schools: School[];
+  selectedSchool: School;
+}
 
-  const handleRemoteChange = (isChecked: boolean) => {
-    setInputValue((prevInputValue) => ({
-      ...prevInputValue,
-      isRemote: isChecked,
-    }));
-
-    const updatedSchools = form
-      .getValues("school")
-      .map((s) => (s.id === inputValue.id ? { ...s, isRemote: isChecked } : s));
-
-    form.setValue("school", updatedSchools);
-  };
-
+function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
   return (
-    <div className="flex gap-2">
+    <div className="border rounded-md py-2 px-4 shadow-sm">
       <FormField
         control={form.control}
-        name="school"
+        name="schools"
         render={({ field }) => (
-          <FormItem className="flex flex-col ">
-            <Popover open={open} onOpenChange={setOpen}>
+          <FormItem className="flex flex-col">
+            <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
-                    aria-expanded={open}
-                    size="lg"
                     variant="outline"
                     role="combobox"
-                    className=" justify-between"
+                    className={cn("w-[200px] justify-between")}
                   >
-                    {inputValue?.address || "Select a school"}
+                    {selectedSchool.address || "Select a school"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-full p-0">
+              <PopoverContent className="w-[200px] p-0">
                 <Command>
                   <CommandInput placeholder="Search language..." />
                   <CommandEmpty>No language found.</CommandEmpty>
@@ -92,23 +69,25 @@ function SchoolInput({ form, schools }: SchoolInputProps) {
                         value={school.address}
                         key={school.id}
                         onSelect={() => {
-                          setInputValue(school);
-                          form.setValue("school", [
-                            ...form.getValues("school"),
-                            ...(!inputValue ? field.value : []),
-                            school,
+                          if (selectedSchool.id) {
+                            return form.setValue("schools", [
+                              ...field.value.map((s) => {
+                                if (s.id === selectedSchool.id) {
+                                  return {
+                                    id: school.id,
+                                    address: school.address,
+                                  };
+                                }
+                                return s;
+                              }),
+                            ]);
+                          }
+                          form.setValue("schools", [
+                            ...field.value.filter((s) => s.id !== ""),
+                            { id: school.id, address: school.address },
                           ]);
-                          setOpen(false);
                         }}
                       >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            inputValue?.id === school.id
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
                         {school.address}
                       </CommandItem>
                     ))}
@@ -116,54 +95,28 @@ function SchoolInput({ form, schools }: SchoolInputProps) {
                 </Command>
               </PopoverContent>
             </Popover>
-
             <FormMessage />
           </FormItem>
         )}
       />
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="terms"
-          checked={inputValue?.isRemote}
-          onClick={(e) => {
-            setInputValue((prevInputValue) => ({
-              ...prevInputValue,
-              isRemote: !prevInputValue?.isRemote,
-            }));
-            handleRemoteChange(!inputValue?.isRemote);
-          }}
-        />
-        <label
-          htmlFor="terms"
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          work as remote
-        </label>
-      </div>
     </div>
   );
 }
 
 function SchoolSelect({ form }: Props) {
-  const schoolsFromDb = [
-    {
-      id: "1",
-      address: "33 New Montgomery St, San Francisco, CA 94105",
-      isRemote: false,
-    },
-    {
-      id: "2",
-      address: "1234 Main St, San Francisco, CA 94122",
-      isRemote: false,
-    },
-    {
-      id: "3",
-      address: "1 Infinite Loop, Cupertino, CA 95014",
-      isRemote: false,
-    },
+  const schoolsfromDb = [
+    { id: "1", address: "School 1" },
+    { id: "2", address: "School 2" },
+    { id: "3", address: "School 3" },
+    { id: "4", address: "School 4" },
+    { id: "5", address: "School 5" },
   ];
 
-  const [elements, setElements] = useState(0);
+  const selectedSchools = form.getValues("schools");
+
+  const filteredSchools = schoolsfromDb.filter(
+    (schoolDb) => !selectedSchools.some((school) => school.id === schoolDb.id)
+  );
 
   return (
     <div className="flex flex-col  gap-4 border-2   border-neutral-500 p-4 rounded-md">
@@ -177,22 +130,24 @@ function SchoolSelect({ form }: Props) {
         <Button
           className="ml-auto"
           type="button"
-          onClick={() => setElements((prev) => prev + 1)}
+          disabled={Boolean(selectedSchools.find((school) => school.id === ""))}
+          onClick={() => {
+            form.setValue("schools", [
+              ...selectedSchools,
+              { id: "", address: "" },
+            ]);
+          }}
         >
           Add School
         </Button>
       </div>
-      <div className="border rounded-md py-2 px-4 shadow-sm">
-        <SchoolInput form={form} schools={schoolsFromDb} />
-        {Array.from({ length: elements }).map((_, i) => (
-          <SchoolInput
-            key={i}
+      <div>
+        {selectedSchools.map((school, index) => (
+          <SelectInput
+            key={index}
             form={form}
-            schools={schoolsFromDb.filter((schoolDb) =>
-              form
-                .getValues()
-                .school.every((school) => school.id !== schoolDb.id)
-            )}
+            schools={filteredSchools}
+            selectedSchool={school}
           />
         ))}
       </div>
