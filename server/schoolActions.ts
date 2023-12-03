@@ -9,7 +9,7 @@ interface Filter {
 
 const PAGINATION_LIMIT = 7;
 
-export async function getSchools(
+export async function getPaginatedSchools(
   page: number = 1,
   sorting: SortingState = [],
   columnFilters: ColumnFiltersState = []
@@ -55,4 +55,8 @@ export async function getSchools(
   const hasMore = pageNumber < totalPages;
 
   return { data, totalPages, page: pageNumber, hasMore };
+}
+
+export async function getAllSchools() {
+  return await db.school.findMany();
 }

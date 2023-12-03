@@ -1,9 +1,9 @@
-import { getSchools } from "@/server/schoolActions";
+import { getPaginatedSchools } from "@/server/schoolActions";
 import { columns } from "./columns";
 import { DataTable } from "../../../components/data-table";
 
 export default async function SchoolsPage() {
-  const schools = await getSchools();
+  const schools = await getPaginatedSchools();
   const tableFilter = [
     {
       accessorKey: "street",
@@ -22,7 +22,7 @@ export default async function SchoolsPage() {
     <div>
       <DataTable
         filterables={tableFilter}
-        queryFn={getSchools}
+        queryFn={getPaginatedSchools}
         columns={columns}
         data={schools}
         queryKey={["schools"]}

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,7 @@ interface SchoolInputProps extends Props {
 }
 
 function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border rounded-md py-2 px-4 shadow-sm">
       <FormField
@@ -53,47 +54,51 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
                     variant="outline"
                     role="combobox"
                     className={cn("w-[200px] justify-between")}
+                    onClick={() => setIsOpen(!isOpen)}
                   >
                     {selectedSchool.address || "Select a school"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0">
-                <Command>
-                  <CommandInput placeholder="Search language..." />
-                  <CommandEmpty>No language found.</CommandEmpty>
-                  <CommandGroup>
-                    {schools.map((school) => (
-                      <CommandItem
-                        value={school.address}
-                        key={school.id}
-                        onSelect={() => {
-                          if (selectedSchool.id) {
-                            return form.setValue("schools", [
-                              ...field.value.map((s) => {
-                                if (s.id === selectedSchool.id) {
-                                  return {
-                                    id: school.id,
-                                    address: school.address,
-                                  };
-                                }
-                                return s;
-                              }),
+              {isOpen && (
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search language..." />
+                    <CommandEmpty>No language found.</CommandEmpty>
+                    <CommandGroup>
+                      {schools.map((school) => (
+                        <CommandItem
+                          value={school.address}
+                          key={school.id}
+                          onSelect={() => {
+                            if (selectedSchool.id) {
+                              return form.setValue("schools", [
+                                ...field.value.map((s) => {
+                                  if (s.id === selectedSchool.id) {
+                                    return {
+                                      id: school.id,
+                                      address: school.address,
+                                    };
+                                  }
+                                  return s;
+                                }),
+                              ]);
+                            }
+                            form.setValue("schools", [
+                              ...field.value.filter((s) => s.id !== ""),
+                              { id: school.id, address: school.address },
                             ]);
-                          }
-                          form.setValue("schools", [
-                            ...field.value.filter((s) => s.id !== ""),
-                            { id: school.id, address: school.address },
-                          ]);
-                        }}
-                      >
-                        {school.address}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </Command>
-              </PopoverContent>
+                            setIsOpen(false);
+                          }}
+                        >
+                          {school.address}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              )}
             </Popover>
             <FormMessage />
           </FormItem>
