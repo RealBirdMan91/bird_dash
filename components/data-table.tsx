@@ -79,10 +79,11 @@ export function DataTable<TData, TValue>({
       await queryFn(pagination.pageIndex + 1, sorting, columnFilters),
     placeholderData: keepPreviousData,
     refetchInterval: 1000 * 60,
+    initialData: data,
   });
 
   const table = useReactTable({
-    data: queryData?.data ?? [],
+    data: queryData?.data,
     columns,
     manualPagination: true,
     pageCount: data.totalPages,

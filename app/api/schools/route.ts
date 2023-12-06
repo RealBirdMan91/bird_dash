@@ -17,6 +17,7 @@ export const POST = withValidation(
           country,
           postal,
           street,
+          address: body.address,
           information: body.information,
           phone: body.phone,
         },

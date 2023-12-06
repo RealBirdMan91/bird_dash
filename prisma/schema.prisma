@@ -16,9 +16,9 @@ model School {
   city        String    @unique
   country     String
   postal      String
+  address     String    @unique
   information String?   @default("")
   phone       String?   @default("")
-  testNumber  Int?      @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   employees EmployeesOnSchools[]

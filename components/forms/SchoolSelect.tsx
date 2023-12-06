@@ -23,19 +23,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CreateEmployeeType } from "@/types/employeeSchema";
+import { School } from "@prisma/client";
 
 type Props = {
   form: UseFormReturn<CreateEmployeeType>;
-};
-
-type School = {
-  address: string;
-  id: string;
+  schools: Pick<School, "id" | "address">[];
 };
 
 interface SchoolInputProps extends Props {
-  schools: School[];
-  selectedSchool: School;
+  selectedSchool: Pick<School, "id" | "address">;
 }
 
 function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
@@ -47,58 +43,57 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
         name="schools"
         render={({ field }) => (
           <FormItem className="flex flex-col">
-            <Popover>
+            <Popover onOpenChange={() => setIsOpen(true)} open={isOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
                   <Button
                     variant="outline"
                     role="combobox"
-                    className={cn("w-[200px] justify-between")}
-                    onClick={() => setIsOpen(!isOpen)}
+                    className="w-full justify-between"
+                    aria-expanded={isOpen}
                   >
                     {selectedSchool.address || "Select a school"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              {isOpen && (
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search language..." />
-                    <CommandEmpty>No language found.</CommandEmpty>
-                    <CommandGroup>
-                      {schools.map((school) => (
-                        <CommandItem
-                          value={school.address}
-                          key={school.id}
-                          onSelect={() => {
-                            if (selectedSchool.id) {
-                              return form.setValue("schools", [
-                                ...field.value.map((s) => {
-                                  if (s.id === selectedSchool.id) {
-                                    return {
-                                      id: school.id,
-                                      address: school.address,
-                                    };
-                                  }
-                                  return s;
-                                }),
-                              ]);
-                            }
-                            form.setValue("schools", [
-                              ...field.value.filter((s) => s.id !== ""),
-                              { id: school.id, address: school.address },
+
+              <PopoverContent className="w-[50vw]  p-0">
+                <Command>
+                  <CommandInput placeholder="Search school..." />
+                  <CommandEmpty>No school found.</CommandEmpty>
+                  <CommandGroup className="max-h-[250px] overflow-y-scroll">
+                    {schools.map((school) => (
+                      <CommandItem
+                        value={school.address}
+                        key={school.id}
+                        onSelect={() => {
+                          setIsOpen(false);
+                          if (selectedSchool.id) {
+                            return form.setValue("schools", [
+                              ...field.value.map((s) => {
+                                if (s.id === selectedSchool.id) {
+                                  return {
+                                    id: school.id,
+                                    address: school.address,
+                                  };
+                                }
+                                return s;
+                              }),
                             ]);
-                            setIsOpen(false);
-                          }}
-                        >
-                          {school.address}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              )}
+                          }
+                          form.setValue("schools", [
+                            ...field.value.filter((s) => s.id !== ""),
+                            { id: school.id, address: school.address },
+                          ]);
+                        }}
+                      >
+                        {school.address}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </Command>
+              </PopoverContent>
             </Popover>
             <FormMessage />
           </FormItem>
@@ -108,19 +103,11 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
   );
 }
 
-function SchoolSelect({ form }: Props) {
-  const schoolsfromDb = [
-    { id: "1", address: "School 1" },
-    { id: "2", address: "School 2" },
-    { id: "3", address: "School 3" },
-    { id: "4", address: "School 4" },
-    { id: "5", address: "School 5" },
-  ];
-
+function SchoolSelect({ form, schools }: Props) {
   const selectedSchools = form.getValues("schools");
 
-  const filteredSchools = schoolsfromDb.filter(
-    (schoolDb) => !selectedSchools.some((school) => school.id === schoolDb.id)
+  const filteredSchools = schools.filter(
+    (school) => !selectedSchools.some((s) => s.id === school.id)
   );
 
   return (
