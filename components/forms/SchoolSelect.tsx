@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -24,11 +23,14 @@ import {
 } from "@/components/ui/popover";
 import { CreateEmployeeType } from "@/types/employeeSchema";
 import { School } from "@prisma/client";
+import { TiDeleteOutline } from "react-icons/ti";
 
 type Props = {
   form: UseFormReturn<CreateEmployeeType>;
   schools: Pick<School, "id" | "address">[];
 };
+
+type Field = ControllerRenderProps<CreateEmployeeType, "schools">;
 
 interface SchoolInputProps extends Props {
   selectedSchool: Pick<School, "id" | "address">;
@@ -36,13 +38,46 @@ interface SchoolInputProps extends Props {
 
 function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
   const [isOpen, setIsOpen] = useState(false);
+  function onSelectHandler(
+    field: Field,
+    school: Pick<School, "id" | "address">
+  ) {
+    setIsOpen(false);
+    if (selectedSchool.id) {
+      return form.setValue("schools", [
+        ...field.value.map((s) => {
+          if (s.id === selectedSchool.id) {
+            return {
+              id: school.id,
+              address: school.address,
+            };
+          }
+          return s;
+        }),
+      ]);
+    }
+    form.setValue("schools", [
+      ...field.value.filter((s) => s.id !== ""),
+      { id: school.id, address: school.address },
+    ]);
+  }
+
+  function onRemoveHandler(school: Pick<School, "id" | "address">) {
+    const schools = form.getValues("schools");
+    if (schools.length <= 1) return;
+    form.setValue(
+      "schools",
+      schools.filter((s) => s.id !== school.id)
+    );
+  }
+
   return (
-    <div className="border rounded-md py-2 px-4 shadow-sm">
+    <div className="border rounded-md py-2 px-4 shadow-sm flex items-center gap-4">
       <FormField
         control={form.control}
         name="schools"
         render={({ field }) => (
-          <FormItem className="flex flex-col">
+          <FormItem className="flex flex-grow flex-col">
             <Popover onOpenChange={() => setIsOpen(true)} open={isOpen}>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -67,26 +102,7 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
                       <CommandItem
                         value={school.address}
                         key={school.id}
-                        onSelect={() => {
-                          setIsOpen(false);
-                          if (selectedSchool.id) {
-                            return form.setValue("schools", [
-                              ...field.value.map((s) => {
-                                if (s.id === selectedSchool.id) {
-                                  return {
-                                    id: school.id,
-                                    address: school.address,
-                                  };
-                                }
-                                return s;
-                              }),
-                            ]);
-                          }
-                          form.setValue("schools", [
-                            ...field.value.filter((s) => s.id !== ""),
-                            { id: school.id, address: school.address },
-                          ]);
-                        }}
+                        onSelect={() => onSelectHandler(field, school)}
                       >
                         {school.address}
                       </CommandItem>
@@ -99,6 +115,14 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
           </FormItem>
         )}
       />
+      {form.getValues("schools").length > 1 && (
+        <div>
+          <TiDeleteOutline
+            className="w-8 h-8 text-red-400 hover:text-red-500 cursor-pointer"
+            onClick={() => onRemoveHandler(selectedSchool)}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -133,7 +157,7 @@ function SchoolSelect({ form, schools }: Props) {
           Add School
         </Button>
       </div>
-      <div>
+      <div className="flex flex-col gap-2">
         {selectedSchools.map((school, index) => (
           <SelectInput
             key={index}
