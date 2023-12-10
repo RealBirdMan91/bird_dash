@@ -41,6 +41,10 @@ function EmployeeForm({ schools }: Props) {
   const form = useForm<CreateEmployeeType>({
     resolver: zodResolver(CreateEmployeeSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
       address: "",
       schools: [
         {

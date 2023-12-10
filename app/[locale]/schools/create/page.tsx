@@ -59,6 +59,8 @@ export default function CreateSchoolPage() {
     resolver: zodResolver(CreateSchoolSchema),
     defaultValues: {
       address: "",
+      information: "",
+      phone: "",
     },
   });
 

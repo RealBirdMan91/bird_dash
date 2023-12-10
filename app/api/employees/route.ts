@@ -24,10 +24,18 @@ export const POST = withValidation(
         },
       });
 
+      await db.employeesOnSchools.createMany({
+        data: body.schools.map((school) => ({
+          employeeId: createdEmployee.id,
+          schoolId: school.id,
+        })),
+      });
+
       return NextResponse.json(createdEmployee, {
         status: 201,
       });
     } catch (error) {
+      console.log(error);
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"

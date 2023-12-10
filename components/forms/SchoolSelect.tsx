@@ -111,7 +111,6 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
                 </Command>
               </PopoverContent>
             </Popover>
-            <FormMessage />
           </FormItem>
         )}
       />
@@ -129,7 +128,6 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
 
 function SchoolSelect({ form, schools }: Props) {
   const selectedSchools = form.getValues("schools");
-
   const filteredSchools = schools.filter(
     (school) => !selectedSchools.some((s) => s.id === school.id)
   );

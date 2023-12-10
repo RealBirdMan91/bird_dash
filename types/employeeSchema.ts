@@ -14,12 +14,16 @@ export const CreateEmployeeSchema = z.object({
   lastName: z.string().min(2).max(25),
   email: z.string().email(),
   phone: z.string().min(5).optional(),
-  schools: z.array(
-    z.object({
-      id: z.string(),
-      address: z.string(),
-    })
-  ),
+  schools: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        address: z.string().min(1),
+      })
+    )
+    .refine((schools) => schools.length > 0, {
+      message: "At least one school must be selected",
+    }),
 });
 
 export type CreateEmployeeType = z.infer<typeof CreateEmployeeSchema>;
