@@ -4,11 +4,30 @@ import { CreateEmployeeSchema } from "@/types/employeeSchema";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 
+import { createClient } from "@supabase/supabase-js";
+
 export const POST = withValidation(
   CreateEmployeeSchema,
   async ({ body, request }) => {
     const [street, postal_city, country] = body.address.trim().split(",");
     const [postal, city] = postal_city.trim().split(" ");
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+
+    const { data, error } = await supabase.auth.admin.inviteUserByEmail(
+      body.email
+    );
+    console.log(data, error);
+    if (error) throw new Error(error.message);
 
     try {
       const createdEmployee = await db.employee.create({
