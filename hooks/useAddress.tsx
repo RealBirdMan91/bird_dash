@@ -8,6 +8,8 @@ async function getPlacePredictions(
   address: string,
   sessionToken: string
 ) {
+  if (!window) return;
+
   const { predictions } =
     await new g.maps.places.AutocompleteService().getPlacePredictions({
       input: address,
