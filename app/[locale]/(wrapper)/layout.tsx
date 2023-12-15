@@ -1,6 +1,9 @@
 import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/Sidebar";
+
 import React from "react";
+import { createSupabaseServerClient } from "@/lib/supabase";
+import { cookies } from "next/headers";
 
 type Props = {
   login: React.ReactNode;
@@ -19,10 +22,19 @@ function LayoutDashboard({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Layout({ login, dashboard }: Props) {
+async function Layout({ login, dashboard }: Props) {
+  const supabase = createSupabaseServerClient(cookies);
+  const { data, error } = await supabase.auth.getSession();
+
   return (
     <>
-      <LayoutDashboard>{dashboard}</LayoutDashboard>
+      {!data.session ? (
+        <main className="bg-slate-700 w-screen h-screen flex items-center justify-center">
+          {login}
+        </main>
+      ) : (
+        <LayoutDashboard>{dashboard}</LayoutDashboard>
+      )}
     </>
   );
 }
