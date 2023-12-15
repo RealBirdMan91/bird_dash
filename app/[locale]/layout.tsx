@@ -43,11 +43,7 @@ export default async function RootLayout({
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Provider>
-            <Sidebar />
-            <div className="ml-64 p-6">
-              <Header />
-              <main className="mt-8">{children}</main>
-            </div>
+            {children}
             <ThemeSwitcher />
           </Provider>
         </NextIntlClientProvider>

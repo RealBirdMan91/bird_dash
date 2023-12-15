@@ -11,7 +11,7 @@ export default async function middleware(req: NextRequest) {
 
   const supabase = createSupabaseMiddlewareClient(req, res);
   const session = await supabase.auth.getSession();
-  console.log("session", session);
+  //console.log("session", session);
   return res;
 }
 

@@ -1,6 +1,6 @@
 import { getPaginatedSchools } from "@/server/schoolActions";
 import { columns } from "./columns";
-import { DataTable } from "../../../components/data-table";
+import { DataTable } from "../../../../../components/data-table";
 
 export default async function SchoolsPage() {
   const schools = await getPaginatedSchools();
