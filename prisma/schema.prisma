@@ -38,6 +38,7 @@ model Employee {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   schools EmployeesOnSchools[]
+  employeeId String  @unique
 }
 
 model EmployeesOnSchools {

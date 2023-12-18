@@ -23,8 +23,15 @@ export const POST = withValidation(
     );
 
     try {
+      const { data, error } = await supabase.auth.admin.inviteUserByEmail(
+        body.email
+      );
+
+      if (error) throw new Error(error.message);
+
       const createdEmployee = await db.employee.create({
         data: {
+          employeeId: data.user.id,
           email: body.email,
           firstName: body.firstName,
           lastName: body.lastName,
@@ -42,12 +49,6 @@ export const POST = withValidation(
           schoolId: school.id,
         })),
       });
-
-      const { data, error } = await supabase.auth.admin.inviteUserByEmail(
-        body.email
-      );
-
-      if (error) throw new Error(error.message);
 
       return NextResponse.json(createdEmployee, {
         status: 201,
