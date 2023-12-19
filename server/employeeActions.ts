@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { Employee } from "@prisma/client";
 import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
 const PAGINATION_LIMIT = 7;
@@ -57,4 +58,15 @@ export async function getPaginatedEmployees(
   const hasMore = pageNumber < totalPages;
 
   return { data, totalPages, page: pageNumber, hasMore };
+}
+
+export async function getSingleEmployee(
+  id: string,
+  select: Partial<Record<keyof Employee, boolean>> = {}
+) {
+  const employee = await db.employee.findUnique({
+    where: { id },
+    select,
+  });
+  return employee;
 }

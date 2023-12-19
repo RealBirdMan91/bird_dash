@@ -1,13 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { createSupabaseServerClient } from "@/lib/supabase";
-import { cookies } from "next/headers";
+import { createSupabaseFrontendClient } from "@/lib/supabase";
+import { toast } from "react-toastify";
 
 export default function Login() {
   async function formHandler(formData: FormData) {
-    "use server";
     const email = formData.get("email");
-    const supabase = createSupabaseServerClient(cookies);
+    const supabase = createSupabaseFrontendClient();
 
     const { data, error } = await supabase.auth.signInWithOtp({
       email: email as string,
@@ -15,6 +16,12 @@ export default function Login() {
         shouldCreateUser: false,
       },
     });
+    if (error) {
+      toast.error("Error sending OTP");
+    }
+    if (data.session) {
+      toast.success("One Time Password sent to your email");
+    }
   }
 
   return (

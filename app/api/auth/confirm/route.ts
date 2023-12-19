@@ -1,3 +1,5 @@
+import { db } from "@/lib/db";
+import { getSingleEmployee } from "@/server/employeeActions";
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { type EmailOtpType } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
@@ -30,10 +32,20 @@ export async function GET(request: NextRequest) {
       }
     );
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { error, data } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     });
+    if (data.user) {
+      await db.employee.update({
+        where: {
+          employeeId: data.user.id,
+        },
+        data: {
+          status: "Authenticated",
+        },
+      });
+    }
     if (!error) {
       return NextResponse.redirect(redirectTo);
     }

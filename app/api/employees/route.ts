@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { withValidation } from "@/lib/withValidation";
 import { CreateEmployeeSchema } from "@/types/employeeSchema";
 import { Prisma } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 export const POST = withValidation(

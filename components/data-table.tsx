@@ -28,11 +28,9 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { set } from "date-fns";
 type Data<TData> = {
   data: TData[];
   totalPages: number;
@@ -78,7 +76,8 @@ export function DataTable<TData, TValue>({
     queryFn: async () =>
       await queryFn(pagination.pageIndex + 1, sorting, columnFilters),
     placeholderData: keepPreviousData,
-    refetchInterval: 1000 * 60,
+    refetchInterval: 30000,
+    refetchOnWindowFocus: true,
     initialData: data,
   });
 

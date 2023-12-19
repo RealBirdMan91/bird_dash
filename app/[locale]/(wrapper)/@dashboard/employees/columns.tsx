@@ -67,7 +67,7 @@ export const columns: ColumnDef<Partial<School>>[] = [
             "bg-green-500 text-white py-1 px-3 rounded-md",
           (row.getValue() as Employee["status"]) === "Banned" &&
             "bg-red-500 text-white py-1 px-3 rounded-md",
-          " text-white py-1 px-3 rounded-md"
+          " text-white py-1 px-3 rounded-md shadow-sm"
         )}
       >
         {row.getValue() as String}
