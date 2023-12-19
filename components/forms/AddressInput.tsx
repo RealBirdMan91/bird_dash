@@ -46,9 +46,10 @@ export default function AddressInput({ form }: Props) {
               }}
               autoComplete="off"
             />
-            {addresses && addresses?.length > 0 && (
-              <CommandEmpty>{t("address.empty")}</CommandEmpty>
-            )}
+            {!addresses ||
+              (addresses?.length < 0 && (
+                <CommandEmpty>{t("address.empty")}</CommandEmpty>
+              ))}
             {isOpen && (
               <CommandGroup>
                 {addresses &&

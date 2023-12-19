@@ -5,7 +5,7 @@ import { ColumnFiltersState, SortingState } from "@tanstack/react-table";
 
 const PAGINATION_LIMIT = 7;
 
-export async function getPaginatedSchools(
+export async function getPaginatedEmployees(
   page: number = 1,
   sorting: SortingState = [],
   columnFilters: ColumnFiltersState = []
@@ -38,13 +38,13 @@ export async function getPaginatedSchools(
     pageNumber = 1;
   }
 
-  const data = await db.school.findMany({
+  const data = await db.employee.findMany({
     select: {
-      city: true,
-      country: true,
-      postal: true,
-      street: true,
-      createdAt: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      status: true,
     },
     where: filters,
     skip: (pageNumber - 1) * PAGINATION_LIMIT,
@@ -52,13 +52,9 @@ export async function getPaginatedSchools(
     orderBy: sortingOrder,
   });
 
-  const totalFiltered = await db.school.count({ where: filters });
+  const totalFiltered = await db.employee.count({ where: filters });
   const totalPages = Math.ceil(totalFiltered / PAGINATION_LIMIT);
   const hasMore = pageNumber < totalPages;
 
   return { data, totalPages, page: pageNumber, hasMore };
-}
-
-export async function getAllSchools() {
-  return await db.school.findMany();
 }

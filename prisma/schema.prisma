@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  Pending
+  Authenticated
+  Banned
+}
+
 model School {
   id          String    @id @default(uuid())
   street      String
@@ -32,7 +38,7 @@ model Employee {
   city        String   
   country     String
   postal      String
-  isActivated Boolean   @default(false)
+  status     Status    @default(Pending)
   email       String    @unique
   phone       String?   @default("")
   createdAt   DateTime  @default(now())
