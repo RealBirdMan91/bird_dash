@@ -14,46 +14,51 @@ export const POST = withValidation(
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
-      /*  {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      } */
     );
 
+    let userId: string = ""; // Deklaration außerhalb des try-Blocks
+
     try {
-      const { data, error } = await supabase.auth.admin.inviteUserByEmail(
-        body.email
-      );
+      const { data: userData, error: inviteError } =
+        await supabase.auth.admin.inviteUserByEmail(body.email);
 
-      if (error) throw new Error(error.message);
+      if (inviteError) throw new Error(inviteError.message);
 
-      const createdEmployee = await db.employee.create({
-        data: {
-          employeeId: data.user.id,
-          email: body.email,
-          firstName: body.firstName,
-          lastName: body.lastName,
-          city,
-          country,
-          postal,
-          street,
-          phone: body.phone,
-        },
+      // Speichern der Benutzer-ID zur späteren Verwendung
+      userId = userData.user.id;
+
+      const result = await db.$transaction(async (prisma) => {
+        const createdEmployee = await prisma.employee.create({
+          data: {
+            employeeId: userId,
+            email: body.email,
+            firstName: body.firstName,
+            lastName: body.lastName,
+            city,
+            country,
+            postal,
+            street,
+            phone: body.phone,
+          },
+        });
+
+        await prisma.employeesOnSchools.createMany({
+          data: body.schools.map((school) => ({
+            employeeId: createdEmployee.id,
+            schoolId: school.id,
+          })),
+        });
+
+        return createdEmployee;
       });
 
-      await db.employeesOnSchools.createMany({
-        data: body.schools.map((school) => ({
-          employeeId: createdEmployee.id,
-          schoolId: school.id,
-        })),
-      });
-
-      return NextResponse.json(createdEmployee, {
-        status: 201,
-      });
+      return NextResponse.json(result, { status: 201 });
     } catch (error) {
+      // Kompensationslogik: Löschen des Benutzers in Supabase, falls die Transaktion fehlschlägt
+      if (userId) {
+        await supabase.auth.admin.deleteUser(userId);
+      }
+
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === "P2002"
