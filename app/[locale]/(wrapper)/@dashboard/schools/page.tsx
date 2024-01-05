@@ -1,4 +1,4 @@
-import { getPaginatedSchools } from "@/server/schoolActions";
+import { getPaginatedSchools } from "@/services/schoolService";
 import { columns } from "./columns";
 import { DataTable } from "../../../../../components/data-table";
 

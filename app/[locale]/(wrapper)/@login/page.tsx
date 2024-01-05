@@ -17,6 +17,7 @@ export default function Login() {
       },
     });
     if (error) {
+      console.log(error);
       toast.error("Error sending OTP");
     }
     if (data.session) {

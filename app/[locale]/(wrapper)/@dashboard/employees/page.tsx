@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/data-table";
-import { getPaginatedEmployees } from "@/server/employeeActions";
+import { getPaginatedEmployees } from "@/services/employeeService";
 import React from "react";
 import { columns } from "./columns";
 

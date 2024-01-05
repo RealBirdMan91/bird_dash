@@ -137,7 +137,7 @@ function EmployeeForm({ schools }: Props) {
             </FormItem>
           )}
         />
-        <SchoolSelect form={form} schools={schools} />
+        <SchoolSelect fieldName="schools" form={form} schools={schools} />
         <Button type="submit" disabled={isPending}>
           {t("submit", { subject: tEmployees("subject") })}
         </Button>

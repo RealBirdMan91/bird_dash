@@ -1,6 +1,6 @@
 import React from "react";
 import EmployeeForm from "./EmployeeForm";
-import { getAllSchools } from "@/server/schoolActions";
+import { getAllSchools } from "@/services/schoolService";
 
 async function CreateEmployeePage() {
   const schools = await getAllSchools();

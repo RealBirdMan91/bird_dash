@@ -10,12 +10,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
@@ -25,8 +20,14 @@ import { CreateEmployeeType } from "@/types/employeeSchema";
 import { School } from "@prisma/client";
 import { TiDeleteOutline } from "react-icons/ti";
 
+type TSchool = {
+  id: string;
+  address: string;
+};
+
 type Props = {
-  form: UseFormReturn<CreateEmployeeType>;
+  fieldName: string;
+  form: UseFormReturn<any>;
   schools: Pick<School, "id" | "address">[];
 };
 
@@ -36,7 +37,12 @@ interface SchoolInputProps extends Props {
   selectedSchool: Pick<School, "id" | "address">;
 }
 
-function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
+function SelectInput({
+  form,
+  schools,
+  selectedSchool,
+  fieldName,
+}: SchoolInputProps) {
   const [isOpen, setIsOpen] = useState(false);
   function onSelectHandler(
     field: Field,
@@ -44,7 +50,7 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
   ) {
     setIsOpen(false);
     if (selectedSchool.id) {
-      return form.setValue("schools", [
+      return form.setValue(fieldName, [
         ...field.value.map((s) => {
           if (s.id === selectedSchool.id) {
             return {
@@ -56,17 +62,17 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
         }),
       ]);
     }
-    form.setValue("schools", [
+    form.setValue(fieldName, [
       ...field.value.filter((s) => s.id !== ""),
       { id: school.id, address: school.address },
     ]);
   }
 
   function onRemoveHandler(school: Pick<School, "id" | "address">) {
-    const schools = form.getValues("schools");
+    const schools = form.getValues(fieldName) as TSchool[];
     if (schools.length <= 1) return;
     form.setValue(
-      "schools",
+      fieldName,
       schools.filter((s) => s.id !== school.id)
     );
   }
@@ -75,7 +81,7 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
     <div className="border rounded-md py-2 px-4 shadow-sm flex items-center gap-4">
       <FormField
         control={form.control}
-        name="schools"
+        name={fieldName}
         render={({ field }) => (
           <FormItem className="flex flex-grow flex-col">
             <Popover onOpenChange={() => setIsOpen(true)} open={isOpen}>
@@ -102,6 +108,7 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
                       <CommandItem
                         value={school.address}
                         key={school.id}
+                        /* @ts-ignore */
                         onSelect={() => onSelectHandler(field, school)}
                       >
                         {school.address}
@@ -114,7 +121,7 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
           </FormItem>
         )}
       />
-      {form.getValues("schools").length > 1 && (
+      {form.getValues(fieldName).length > 1 && (
         <div>
           <TiDeleteOutline
             className="w-8 h-8 text-red-400 hover:text-red-500 cursor-pointer"
@@ -126,8 +133,8 @@ function SelectInput({ form, schools, selectedSchool }: SchoolInputProps) {
   );
 }
 
-function SchoolSelect({ form, schools }: Props) {
-  const selectedSchools = form.getValues("schools");
+function SchoolSelect({ form, schools, fieldName }: Props) {
+  const selectedSchools = form.watch(fieldName) as TSchool[];
   const filteredSchools = schools.filter(
     (school) => !selectedSchools.some((s) => s.id === school.id)
   );
@@ -146,7 +153,7 @@ function SchoolSelect({ form, schools }: Props) {
           type="button"
           disabled={Boolean(selectedSchools.find((school) => school.id === ""))}
           onClick={() => {
-            form.setValue("schools", [
+            form.setValue(fieldName, [
               ...selectedSchools,
               { id: "", address: "" },
             ]);
@@ -158,6 +165,7 @@ function SchoolSelect({ form, schools }: Props) {
       <div className="flex flex-col gap-2">
         {selectedSchools.map((school, index) => (
           <SelectInput
+            fieldName={fieldName}
             key={index}
             form={form}
             schools={filteredSchools}
